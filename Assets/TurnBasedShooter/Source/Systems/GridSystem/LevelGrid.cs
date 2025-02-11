@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGrid : MonoBehaviour
@@ -5,45 +6,58 @@ public class LevelGrid : MonoBehaviour
     // Level Grid Instance
     public static LevelGrid Instance { get; private set; }
 
-    [SerializeField] private Transform gridDebugObject;
+    // Entity Referenced Components
+    [SerializeField] private Transform gridDebugAgent;
     private GridSystem gridSystem;
 
+    // Pre start function initialiazation
     private void Awake()
     {
         // Set Instance
         if (Instance != null)
         {
-            Debug.LogWarning("Warning: Instance of: " + Instance + "already exists");
+            Debug.LogWarning("Warning: Instance of: " + Instance + " already exists");
             Destroy(gameObject);
             return;
         }
         Instance = this;
 
-        // Create Grid System
+        // Create The Grid System
         gridSystem = new GridSystem(10, 10, 2f);
-        gridSystem.CreateDebugObjects(gridDebugObject);
+        // Create Debug Data Agents
+        gridSystem.CreateDebugData(gridDebugAgent);
     }
 
     // Get Grid Object and sets a unit in it.
-    public void SetUnitAtGridPosition(GridPosition gridPosition, PlayerMovementSystem playerUnit)
+    public void AddUnitAtGridPosition(GridPosition gridPosition, Player playerUnit)
     {
-        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-        gridObject.SetPlayerUnit(playerUnit);
+        // From grid system get the gridcell at specified grid position.
+        GridCell gridCell = gridSystem.GetGridCell(gridPosition);
+        gridCell.AddPlayerUnit(playerUnit);
     }
 
-    public PlayerMovementSystem GetUnitAtGridPosition(GridPosition gridPosition)
+    // Returns the unit at a grid position.
+    public List<Player> GetUnitsAtGridPosition(GridPosition gridPosition)
     {
-        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-        return gridObject.GetPlayerUnit();
+        GridCell gridCell = gridSystem.GetGridCell(gridPosition);
+        return gridCell.GetPlayerUnits();
     }
 
-    public void ClearUnitAtGridPosition(GridPosition gridPosition)
+    // Clears unit reference at a grid position
+    public void RemoveUnitAtGridPosition(GridPosition gridPosition, Player playerUnit)
     {
-        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
-        gridObject.SetPlayerUnit(null);
+        GridCell gridCell = gridSystem.GetGridCell(gridPosition);
+        gridCell.RemovePlayerUnit(playerUnit);
     }
 
-    // Get Grid Position
+
+    public void UnitMovedGridPosition(Player playerUnit, GridPosition fromGridPosition, GridPosition toGridPosition)
+    {
+        RemoveUnitAtGridPosition(fromGridPosition, playerUnit);
+        AddUnitAtGridPosition(toGridPosition, playerUnit);
+    }
+
+    // Getter for Grid Position pertaining to a grid system.
     public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
 
 }

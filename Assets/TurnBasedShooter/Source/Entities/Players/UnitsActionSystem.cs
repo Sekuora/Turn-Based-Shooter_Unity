@@ -19,7 +19,7 @@ public class UnitsActionSystem : MonoBehaviour
     public event EventHandler OnSelectedUnitChanged;
 
     // Component References
-    [SerializeField] private PlayerMovementSystem activePlayer;
+    [SerializeField] private Player activePlayer;
 
     [SerializeField] private MouseRaycastSystem raycastSystem;
 
@@ -59,7 +59,7 @@ public class UnitsActionSystem : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 5000f, unitMask))
         {
             // When raycast tocuhes upon a unit's movement component, out / return said player movemnt system reference.
-            if (raycastHit.transform.TryGetComponent<PlayerMovementSystem>(out PlayerMovementSystem player))
+            if (raycastHit.transform.TryGetComponent<Player>(out Player player))
             {
                 // Assign player reference gathered from raycastHit as the active player. 
                 SetSelectedUnit(player);
@@ -76,7 +76,7 @@ public class UnitsActionSystem : MonoBehaviour
     /*
      * Perform unit selection change and throw corresponding event.
      */
-    private void SetSelectedUnit(PlayerMovementSystem player)
+    private void SetSelectedUnit(Player player)
     {
         activePlayer = player;
         Debug.Log("Switching player");
@@ -86,7 +86,7 @@ public class UnitsActionSystem : MonoBehaviour
     }
 
     /* Active player getter */
-    public PlayerMovementSystem GetPlayer()
+    public Player GetPlayer()
     {
         return activePlayer;
     }

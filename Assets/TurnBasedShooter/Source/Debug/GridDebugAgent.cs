@@ -1,24 +1,24 @@
 using TMPro;
 using UnityEngine;
 
-public class GridDebugObject : MonoBehaviour
+public class GridDebugAgent : MonoBehaviour
 {
 
     // TextMeshPro Reference
     [SerializeField] private TextMeshPro textMeshPro;
 
-    private GridObject gridObject;
+    private GridCell gridCell;
 
-    public void SetGridObject(GridObject gridObject)
+    public void SetGridCell(GridCell gridCell)
     {
-        this.gridObject = gridObject;
+        this.gridCell = gridCell;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         /* Get the grid position of the grid object, transform it to a string
          * Pass, x : z position from the grid position to string method. */
-        textMeshPro.text = gridObject.ToString();
+        textMeshPro.text = gridCell.ToString();
     }
 }

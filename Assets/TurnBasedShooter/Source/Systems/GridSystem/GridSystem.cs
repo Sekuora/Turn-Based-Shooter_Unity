@@ -6,15 +6,15 @@ using UnityEngine;
 */
 public class GridSystem
 {
-
+    // Grid Data
     private int width;
     private int height;
     private float cellSize;
 
-    // Define 2D Array
-    private GridObject[,] gridObjectArray;
+    // Define 2D Array for grid cells. Each cell can store its x, z positions.
+    private GridCell[,] gridCellsArray;
 
-    // Entry Point for Grid System
+    // Constructor
     public GridSystem(int width, int height, float cellSize)
     {
         // Grid Data
@@ -22,52 +22,76 @@ public class GridSystem
         this.height = height;
         this.cellSize = cellSize;
 
-        gridObjectArray = new GridObject[width, height];
+        // Create new grid objects array
+        gridCellsArray = new GridCell[width, height];
 
         // Generate grid: x for columns, z for rows.
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
+                
+                // Assign grid positions to x, z
                 GridPosition gridPosition = new GridPosition(x, z);
-                gridObjectArray[x, z] = new GridObject(this, gridPosition);
+                // Store grid positions inside an arrray of grid positions.
+                gridCellsArray[x, z] = new GridCell(this, gridPosition); 
             }
         }
     }
 
-    // Define world vector
+    // Define world vector - Grid to world position transforms.
     public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
         return new Vector3(gridPosition.x, 0, gridPosition.z) * cellSize;
+
     }
 
-    // Define grid position
+    // Define grid position, used to return current grid position
     public GridPosition GetGridPosition(Vector3 worldPosition)
     {
-        return new GridPosition(
-        Mathf.RoundToInt(worldPosition.x / cellSize),
-        Mathf.RoundToInt(worldPosition.z / cellSize)
-        );
+        return new GridPosition(Mathf.RoundToInt(worldPosition.x / cellSize),Mathf.RoundToInt(worldPosition.z / cellSize));
     }
 
-    public void CreateDebugObjects(Transform debugObject)
+    // Debug UI I made to shows numbers in game
+    // DebugDataAgent is the physical representation in game that holds the data for each GridCell.
+    public void CreateDebugData(Transform debugAgent)
     {
-        // Repeat creation of grid system
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
                 GridPosition gridPosition = new GridPosition(x, z);
-                Transform debugObjectTransform = GameObject.Instantiate(debugObject, GetWorldPosition(gridPosition), Quaternion.identity);
-                GridDebugObject gridDebugObject = debugObjectTransform.GetComponent<GridDebugObject>();
-                gridDebugObject.SetGridObject(GetGridObject(gridPosition));
+
+                /* For each x, z ; column, row in the grid,
+                 * instantiate a new debug data agent at each grid position. */
+                Transform debugAgentTransform = GameObject.Instantiate(
+                    debugAgent, 
+                    GetWorldPosition(gridPosition), 
+                    Quaternion.identity
+                    );
+
+                // Create debug agents
+                GridDebugAgent gridDebugAgent = debugAgentTransform.GetComponent<GridDebugAgent>();
+
+                // Set agent to a grid cell
+                gridDebugAgent.SetGridCell(GetGridCell(gridPosition));
             }
         }
     }
 
-    public GridObject GetGridObject(GridPosition gridPosition)
+    // Get grid cell in a grid position
+    public GridCell GetGridCell(GridPosition gridPosition)
     {
-        return gridObjectArray[gridPosition.x, gridPosition.z];
+        try
+        {
+            return gridCellsArray[gridPosition.x, gridPosition.z];
+        }
+        catch (System.IndexOutOfRangeException ex)
+        {
+            Debug.Log("Exception: " + ex);
+            Debug.Log("Location: " + gridPosition.x + "_" + gridPosition.z);
+        }
+        return null;
     }
-
+ 
 } 

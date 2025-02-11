@@ -8,7 +8,7 @@ using UnityEngine;
  * 
  * Defines the basic player functionality.
  */
-public class PlayerMovementSystem : MonoBehaviour
+public class Player : MonoBehaviour
 {
     // Player Data
     [SerializeField] private float moveSpeed;
@@ -20,6 +20,9 @@ public class PlayerMovementSystem : MonoBehaviour
     // Target to move to
     private Vector3 targetPosition;
 
+    // Entity Referenced Components
+    private GridPosition currentGridPosition;
+
     private void Awake()
     {
         // Don't move to default target
@@ -28,8 +31,12 @@ public class PlayerMovementSystem : MonoBehaviour
 
     private void Start()
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(this.transform.position);
-        LevelGrid.Instance.SetUnitAtGridPosition(gridPosition, this);
+
+        // Get grid position of the player's transform position
+        currentGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+
+        // Set reference to this unit as unit at the current grid position.
+        LevelGrid.Instance.AddUnitAtGridPosition(currentGridPosition, this);
     }
 
     /**
@@ -38,9 +45,16 @@ public class PlayerMovementSystem : MonoBehaviour
      */
     private void Update()
     {
-
         MoveToTarget();
 
+        // Update grid position of this player
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if(newGridPosition != currentGridPosition)
+        {
+            // Call method to update unit's grid position
+            LevelGrid.Instance.UnitMovedGridPosition(this, currentGridPosition, newGridPosition);
+            currentGridPosition = newGridPosition;
+        }
     }
 
     /**
@@ -76,6 +90,7 @@ public class PlayerMovementSystem : MonoBehaviour
             animator.SetBool("IsWalking", false);
         }
     }
+
 
     public void SetTargetPosition(Vector3 targetPosition)
     {
