@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
     private void MoveToTarget()
     {
         // Stopping value to avoid rounding problems
-        float epsilonStopValue = 0.01f;
+        float epsilonStopValue = 0.05f;
 
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
@@ -74,11 +74,12 @@ public class Player : MonoBehaviour
         // Moves while distance to target greater than stopping value.
         if (distanceToTarget > epsilonStopValue)
         {
+            // Transform Position
             Vector3 moveDirection = (targetPosition - transform.position).normalized;
 
             transform.position += moveSpeed * Time.deltaTime * moveDirection;
 
-            // Look towards target position with linear interpolation
+            // Transform Rotation
             transform.forward = Vector3.Lerp(transform.forward, moveDirection * rotationSpeed, Time.deltaTime);
 
             // set animation waling
