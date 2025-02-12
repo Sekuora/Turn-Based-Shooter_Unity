@@ -1,4 +1,6 @@
+// Copyright(c) 2025 Fyragic. All rights reserved.
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // Grid cells that can store data such as player units stepping over.
@@ -56,5 +58,10 @@ public class GridCell
         }
 
         return gridPosition.ToString() + "\n" + unitString;
+    }
+
+    public bool GridCellContainsPlayers()
+    {
+        return playerUnits.Count > 0;
     }
 }

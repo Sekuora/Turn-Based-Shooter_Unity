@@ -1,3 +1,4 @@
+// Copyright(c) 2025 Fyragic. All rights reserved.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,5 +60,18 @@ public class LevelGrid : MonoBehaviour
 
     // Getter for Grid Position pertaining to a grid system.
     public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
+
+    public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
+
+    // Check if a grid of the level grid is a valid position for player actions.
+    public bool IsGridPositionInRange(GridPosition gridPosition) => gridSystem.IsGridPositionValid(gridPosition);
+
+    public bool IsGridPositionFilled(GridPosition gridPosition)
+    {
+        GridCell gridCell = gridSystem.GetGridCell(gridPosition);
+
+        return gridCell.GridCellContainsPlayers();
+  
+    }
 
 }

@@ -11,22 +11,32 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Player Data
+    // Move Speed
     [SerializeField] private float moveSpeed;
+
+    // Rotation Speed
     [SerializeField] private float rotationSpeed;
 
     // Player Component References
+    // Animator Component
     [SerializeField] private Animator animator;
 
     // Target to move to
     private Vector3 targetPosition;
-
+   
     // Entity Referenced Components
     private GridPosition currentGridPosition;
+
+    // Entity Action Components
+    [SerializeField] private MoveSystem moveSystem;
+
 
     private void Awake()
     {
         // Don't move to default target
         targetPosition = transform.position;
+
+        moveSystem = GetComponent<MoveSystem>();
     }
 
     private void Start()
@@ -45,11 +55,16 @@ public class Player : MonoBehaviour
      */
     private void Update()
     {
-        MoveToTarget();
+        //moveSystem.MoveToTarget();
 
+        UpdateGridPosition();
+    }
+
+    private void UpdateGridPosition()
+    {
         // Update grid position of this player
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-        if(newGridPosition != currentGridPosition)
+        if (newGridPosition != currentGridPosition)
         {
             // Call method to update unit's grid position
             LevelGrid.Instance.UnitMovedGridPosition(this, currentGridPosition, newGridPosition);
@@ -57,44 +72,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    /**
-     *@brief Moves to a given target.
-     * Used to move player to a target such as a mouse press or touch input.
-     *
-     */
-    private void MoveToTarget()
-    {
-        // Stopping value to avoid rounding problems
-        float epsilonStopValue = 0.05f;
-
-        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-
-        //Debug.Log(distanceToTarget);
-
-        // Moves while distance to target greater than stopping value.
-        if (distanceToTarget > epsilonStopValue)
-        {
-            // Transform Position
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
-
-            transform.position += moveSpeed * Time.deltaTime * moveDirection;
-
-            // Transform Rotation
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection * rotationSpeed, Time.deltaTime);
-
-            // set animation waling
-            animator.SetBool("IsWalking", true);
-        }
-        else
-        {   
-            // set animation idle
-            animator.SetBool("IsWalking", false);
-        }
-    }
 
 
-    public void SetTargetPosition(Vector3 targetPosition)
-    {
-        this.targetPosition = targetPosition;
-    }
+    // Getters / Setters - Properties
+    public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+
+    public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
+
+    public Animator Animator { get => animator; set => animator = value; }
+
+    public Vector3 TargetPosition { get => targetPosition; set => targetPosition = value; }
+
+    public MoveSystem MoveSystem { get => moveSystem; set => moveSystem = value; }
+
+    public GridPosition CurrentGridPosition { get => currentGridPosition; set => currentGridPosition = value; }
 }

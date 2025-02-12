@@ -93,5 +93,14 @@ public class GridSystem
         }
         return null;
     }
+
+    // Define valid grid position conditions.
+    public bool IsGridPositionValid(GridPosition gridPosition)
+    {
+        return gridPosition.x >= 0 &&
+               gridPosition.z >= 0 &&
+               gridPosition.x < width &&
+               gridPosition.z < height;
+    }
  
 } 

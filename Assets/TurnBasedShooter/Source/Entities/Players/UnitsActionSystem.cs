@@ -19,7 +19,7 @@ public class UnitsActionSystem : MonoBehaviour
     public event EventHandler OnSelectedUnitChanged;
 
     // Component References
-    [SerializeField] private Player activePlayer;
+    [SerializeField] private Player activePlayerUnit;
 
     [SerializeField] private MouseRaycastSystem raycastSystem;
 
@@ -47,7 +47,13 @@ public class UnitsActionSystem : MonoBehaviour
 
         {
             if (WhenUnitSelected()) return;
-            activePlayer.SetTargetPosition(raycastSystem.CollectRaycastHitPoint());
+
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(raycastSystem.CollectRaycastHitPoint());
+
+            if(activePlayerUnit.MoveSystem.IsValidActionGrid(mouseGridPosition))
+            {
+                activePlayerUnit.MoveSystem.SetTargetPosition(mouseGridPosition);
+            }
 
         }
     }
@@ -78,7 +84,7 @@ public class UnitsActionSystem : MonoBehaviour
      */
     private void SetSelectedUnit(Player player)
     {
-        activePlayer = player;
+        activePlayerUnit = player;
         Debug.Log("Switching player");
         // If events exist trigger event.
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
@@ -88,6 +94,6 @@ public class UnitsActionSystem : MonoBehaviour
     /* Active player getter */
     public Player GetPlayer()
     {
-        return activePlayer;
+        return activePlayerUnit;
     }
 }

@@ -1,21 +1,30 @@
+// Copyright(c) 2025 Fyragic. All rights reserved.
 using UnityEngine;
 
 public class PlayerExoskeleton : MonoBehaviour
 {
     
     // Exoskeleton Systems
-    [SerializeField] private Player _playerMovementSystem;
+    [SerializeField] 
+    private Player player;
    
     
     private void Awake()
     {
-        //_playerMovementSystem = GetComponent<PlayerMovementSystem>();
+        // Reference to Player
+        player = GetComponent<Player>();
+        
     }
 
-    public Player PlayerMovementSystem
+    virtual protected void Start()
     {
-        get { return _playerMovementSystem; }
-        set { _playerMovementSystem = value; }
+        Player = player;
+    }
+
+    public Player Player
+    {
+        get { return player; }
+        set { player = value; }
     }
 
 

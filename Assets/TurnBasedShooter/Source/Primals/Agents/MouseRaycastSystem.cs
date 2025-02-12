@@ -1,3 +1,4 @@
+// Copyright(c) 2025 Fyragic. All rights reserved.
 using UnityEditor.SearchService;
 using UnityEngine;
 
