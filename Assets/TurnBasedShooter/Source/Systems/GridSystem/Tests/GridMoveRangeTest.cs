@@ -1,3 +1,4 @@
+// Copyright(c) 2025 Fyragic. All rights reserved.
 using UnityEngine;
 
 public class GridMoveRangeTest : MonoBehaviour
@@ -9,7 +10,13 @@ public class GridMoveRangeTest : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.T))
         {
-            player.MoveSystem.CheckValidActionGrids();
+            // Hide positions by default
+            GridVFX.Instance.HideAllGridPositions();
+
+            // Show only valid grid positions
+            GridVFX.Instance.ShowGridPositions(player.MoveSystem.CheckValidActionGrids());
+
+            
         }
     }
 }

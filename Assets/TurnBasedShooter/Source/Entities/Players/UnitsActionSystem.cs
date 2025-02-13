@@ -92,7 +92,7 @@ public class UnitsActionSystem : MonoBehaviour
     }
 
     /* Active player getter */
-    public Player GetPlayer()
+    public Player GetActivePlayer()
     {
         return activePlayerUnit;
     }
