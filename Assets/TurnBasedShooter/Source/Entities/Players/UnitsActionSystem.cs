@@ -14,6 +14,8 @@ public class UnitsActionSystem : MonoBehaviour
     public static UnitsActionSystem Instance { get; private set; }
 
 
+    private bool IsReady;
+
     /* Event thrown when unit selection occurs
        Pass sender object, args for system events are left empty.*/
     public event EventHandler OnSelectedUnitChanged;
@@ -39,9 +41,19 @@ public class UnitsActionSystem : MonoBehaviour
         unitMask = LayerMask.GetMask("Player");
     }
 
+    private void Start()
+    {
+        SetReadyState();
+    }
+
     // Update is called once per frame
     private void Update()
     {
+        if(!IsReady)
+        {
+            return;
+        }
+
         // Move unit to raycast point
         if (Input.GetMouseButtonDown(0))
 
@@ -50,14 +62,37 @@ public class UnitsActionSystem : MonoBehaviour
 
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(raycastSystem.CollectRaycastHitPoint());
 
+            // Call MoveAction if grid is valid
             if(activePlayerUnit.MoveSystem.IsValidActionGrid(mouseGridPosition))
             {
-                activePlayerUnit.MoveSystem.SetTargetPosition(mouseGridPosition);
+                SetNotReadyState();
+                activePlayerUnit.MoveSystem.SetTargetPosition(mouseGridPosition, SetReadyState);
             }
 
         }
+        // Actions
+        // Spin Action
+        if(Input.GetMouseButtonDown(1))
+        {
+            SetNotReadyState();
+            activePlayerUnit.SpinAction.Spin(SetReadyState);
+        }
     }
 
+
+    // Set ready steate to true
+    private void SetReadyState()
+    {
+        IsReady = true;
+    }
+
+    // Set ready steate to false
+    private void SetNotReadyState()
+    {
+        IsReady = false;
+    }
+
+    // Return true if a player unit is selected
     private bool WhenUnitSelected()
     {
         // Cast a ray from camera

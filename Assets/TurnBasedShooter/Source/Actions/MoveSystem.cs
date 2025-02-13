@@ -1,10 +1,12 @@
 // Copyright(c) 2025 Fyragic. All rights reserved.
 using NUnit.Framework;
 using TMPro;
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveSystem : PlayerExoskeleton
+public class MoveSystem : PrimalAction
 {
 
     [SerializeField]
@@ -29,32 +31,45 @@ public class MoveSystem : PlayerExoskeleton
 
         //Debug.Log(distanceToTarget);
 
+        if (!IsActive)
+        {
+            return;
+        }
+        // Transform Position
+        Vector3 moveDirection = (Player.TargetPosition - Player.transform.position).normalized;
+
         // Moves while distance to target greater than stopping value.
         if (distanceToTarget > epsilonStopValue)
         {
-            // Transform Position
-            Vector3 moveDirection = (Player.TargetPosition - Player.transform.position).normalized;
-
             Player.transform.position += Player.MoveSpeed * Time.deltaTime * moveDirection;
 
-            // Transform Rotation
-            Player.transform.forward = Vector3.Lerp(Player.transform.forward, moveDirection * Player.RotationSpeed, Time.deltaTime);
-
+           
             // set animation waling
             Player.Animator.SetBool("IsWalking", true);
+
         }
         else
         {
             // set animation idle
             Player.Animator.SetBool("IsWalking", false);
+            IsActive = false;
+            onActionComplete();
         }
+
+        // Transform Rotation
+        Player.transform.forward = Vector3.Lerp(Player.transform.forward, moveDirection * Player.RotationSpeed, Time.deltaTime);
+
     }
 
     // Go to target: In this case mouse inputs or other peripherals define the target.
-    public void SetTargetPosition(GridPosition targetPosition)
+    public void SetTargetPosition(GridPosition targetPosition, Action onActionComplete)
     {
+        // Pass the onActionComplete delegate state
+        this.onActionComplete = onActionComplete;
+
         // Get the target world position
         Player.TargetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
+        IsActive = true;
     }
 
 
@@ -105,7 +120,7 @@ public class MoveSystem : PlayerExoskeleton
 
                 // Add the valid list positions after checking coditions
                 validGridPositions.Add(testGridPosition);
-                Debug.Log(testGridPosition);
+                //Debug.Log(testGridPosition);
             }
         }
        

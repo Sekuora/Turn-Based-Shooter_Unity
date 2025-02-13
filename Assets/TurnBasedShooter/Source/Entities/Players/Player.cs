@@ -30,6 +30,9 @@ public class Player : MonoBehaviour
     // Entity Action Components
     [SerializeField] private MoveSystem moveSystem;
 
+    // Actions
+    [SerializeField] private SpinAction spinAction;
+
 
     private void Awake()
     {
@@ -37,6 +40,8 @@ public class Player : MonoBehaviour
         targetPosition = transform.position;
 
         moveSystem = GetComponent<MoveSystem>();
+
+        spinAction = GetComponent<SpinAction>();
     }
 
     private void Start()
@@ -86,4 +91,7 @@ public class Player : MonoBehaviour
     public MoveSystem MoveSystem { get => moveSystem; set => moveSystem = value; }
 
     public GridPosition CurrentGridPosition { get => currentGridPosition; set => currentGridPosition = value; }
+    
+    // Actions
+    public SpinAction SpinAction { get => spinAction; set => spinAction = value; }
 }
