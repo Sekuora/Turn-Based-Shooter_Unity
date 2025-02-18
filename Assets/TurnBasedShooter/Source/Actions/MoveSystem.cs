@@ -12,6 +12,11 @@ public class MoveSystem : PrimalAction
     [SerializeField]
     private int maxMoveDistance = 4;
 
+    private void Awake()
+    {
+        ActionName = "Move";
+    }
+
     private void Update()
     {
         MoveToTarget();
@@ -73,18 +78,8 @@ public class MoveSystem : PrimalAction
     }
 
 
-    // Compound boolean check for valid action grids list
-    public bool IsValidActionGrid(GridPosition gridPosition)
-    {
-
-        List<GridPosition> validGridPositions = CheckValidActionGrids();
-        // If list contains the grid position passed as parameter returns true, else false
-        return validGridPositions.Contains(gridPosition);
-
-    }
-
     // Check Grid Positions List calidity to perform actions
-    public List<GridPosition> CheckValidActionGrids()
+    public override List<GridPosition> CheckValidActionGrids()
     {
         List<GridPosition> validGridPositions = new();
 

@@ -72,16 +72,16 @@ public class GridVFX : MonoBehaviour
         }
     }
 
-    // Update tile if is valid for actions
+    // Update tile if is valid for current actions
     private void UpdateGridTile()
     {
 
-        Player activePlayerUnit = UnitsActionSystem.Instance.GetActivePlayer();
+        PrimalAction activeAction = UnitsActionSystem.Instance.ActiveAction;
         // Hide positions by default
         HideAllGridPositions();
 
         // Show only valid grid positions
-        ShowGridPositions(activePlayerUnit.MoveSystem.CheckValidActionGrids());
+        ShowGridPositions(activeAction.CheckValidActionGrids());
 
     }
 }

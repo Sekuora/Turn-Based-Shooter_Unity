@@ -35,7 +35,7 @@ public class SelectedPointerVFX : PlayerExoskeleton
         /* We access to the UnitsActionSystem Instance to avoid referencing it in this class.
         * From it we get the active player and compare it to the pointer player.
         */
-        if (UnitsActionSystem.Instance.GetActivePlayer() == Player)
+        if (UnitsActionSystem.Instance.GetActivePlayerUnit() == Player)
         {
             selectedUnitPointer.enabled = true;
 

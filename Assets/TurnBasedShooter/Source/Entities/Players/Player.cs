@@ -21,17 +21,24 @@ public class Player : MonoBehaviour
     // Animator Component
     [SerializeField] private Animator animator;
 
-    // Target to move to
-    private Vector3 targetPosition;
-   
-    // Entity Referenced Components
-    private GridPosition currentGridPosition;
-
     // Entity Action Components
     [SerializeField] private MoveSystem moveSystem;
 
     // Actions
     [SerializeField] private SpinAction spinAction;
+
+
+    // Target to move to
+    private Vector3 targetPosition;
+
+    // Player's current grid position
+    private GridPosition currentGridPosition;
+
+    // Array of primal actions
+    private PrimalAction[] primalActions;
+    
+
+
 
 
     private void Awake()
@@ -42,6 +49,8 @@ public class Player : MonoBehaviour
         moveSystem = GetComponent<MoveSystem>();
 
         spinAction = GetComponent<SpinAction>();
+
+        primalActions = GetComponents<PrimalAction>();
     }
 
     private void Start()
@@ -94,4 +103,5 @@ public class Player : MonoBehaviour
     
     // Actions
     public SpinAction SpinAction { get => spinAction; set => spinAction = value; }
+    public PrimalAction[] PrimalActions { get => primalActions; set => primalActions = value; }
 }

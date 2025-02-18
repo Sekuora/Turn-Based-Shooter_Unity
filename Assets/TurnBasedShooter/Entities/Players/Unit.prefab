@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a8d19833c6fe8409d4a0af0abcd2ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 3257784518061773747}
 --- !u!1001 &2178250656584183431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -578,6 +579,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95485627480488536, guid: 8dbb22b9d53a7664b8619d4c6888d92f, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: b5f71c859f9f9bf41badda8a4650082c, type: 3}
     - target: {fileID: 95485627480488536, guid: 8dbb22b9d53a7664b8619d4c6888d92f, type: 3}
       propertyPath: m_Controller
       value: 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class PrimalAction : PlayerExoskeleton
@@ -7,9 +8,17 @@ public abstract class PrimalAction : PlayerExoskeleton
 
     protected Action onActionComplete;
 
-    // Update is called once per frame
-    void Update()
+    private string actionName;
+
+    // Set or get action name
+    public string ActionName { get => actionName; set => actionName = value; }
+
+    public virtual bool IsValidActionGrid(GridPosition gridPosition)
     {
-        
+        List<GridPosition> validGridPositions = CheckValidActionGrids();
+        // If list contains the grid position passed as parameter returns true, else false
+        return validGridPositions.Contains(gridPosition);
     }
+
+    public abstract List<GridPosition> CheckValidActionGrids();
 }

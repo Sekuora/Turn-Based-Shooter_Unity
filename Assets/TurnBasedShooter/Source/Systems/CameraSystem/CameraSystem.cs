@@ -17,7 +17,7 @@ public class CameraSystem : MonoBehaviour
      * Define constants with the game initials TBS
      * And then with default pascal case.
      */
-    private const float TBS_maxZoomInValue = -5f;
+    private const float TBS_maxZoomInValue = -5.4f;
     private const float TBS_maxZoomOutValue = 10f;
 
     // Camera Rig
