@@ -72,6 +72,8 @@ public class LevelGrid : MonoBehaviour
     // Check if a grid of the level grid is a valid position for player actions.
     public bool IsGridPositionInRange(GridPosition gridPosition) => gridSystem.IsGridPositionValid(gridPosition);
 
+
+    // Check if a grid of the level grid contains a unit in it
     public bool IsGridPositionFilled(GridPosition gridPosition)
     {
         GridCell gridCell = gridSystem.GetGridCell(gridPosition);
@@ -79,5 +81,14 @@ public class LevelGrid : MonoBehaviour
         return gridCell.GridCellContainsPlayers();
   
     }
+
+    public Player CollectPlayerUnitAtGridPosition(GridPosition gridPosition)
+    {
+        GridCell gridCell = gridSystem.GetGridCell(gridPosition);
+
+        return gridCell.CollectPlayerUnitInCell();
+
+    }
+
 
 }

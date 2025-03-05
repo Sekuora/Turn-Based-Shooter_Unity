@@ -84,8 +84,6 @@ public class MoveAction : PrimalAction
     {
         List<GridPosition> validGridPositions = new();
 
-        
-
         for (int x = -maxMoveDistance; x <= maxMoveDistance; x++)
         {
             for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)

@@ -64,4 +64,16 @@ public class GridCell
     {
         return playerUnits.Count > 0;
     }
+
+    public Player CollectPlayerUnitInCell()
+    {
+        if (GridCellContainsPlayers())
+        {
+            return playerUnits[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

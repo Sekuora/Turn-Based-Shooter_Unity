@@ -2,6 +2,7 @@
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Buffers;
 
 
 /*
@@ -118,6 +119,12 @@ public class UnitsActionSystem : MonoBehaviour
                         SetNotReadyState();
                         spinAction.Spin(SetReadyState);
                         break;
+
+                    case ShootAction shootAction:
+                        SetNotReadyState();
+                        shootAction.Spin(SetReadyState);
+                        break;
+
 
                 }
             }

@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 5183689476226171024}
   - component: {fileID: 7579492170715188297}
   - component: {fileID: 2936356236187684217}
+  - component: {fileID: 6032045771766740375}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Player
@@ -172,12 +173,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274387400423c8b4880207447a8407bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEnemy: 0
   moveSpeed: 4
   rotationSpeed: 25
   animator: {fileID: 2851361401446960654}
   moveSystem: {fileID: 0}
   turnSystem: {fileID: 0}
   spinAction: {fileID: 0}
+  shootAction: {fileID: 0}
   energy_max: 4
   energy: 2
 --- !u!114 &5183689476226171024
@@ -220,6 +223,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 3257784518061773747}
+--- !u!114 &6032045771766740375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894626783395295391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67ee47c42bb15654599a0cff034fcbec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 3257784518061773747}
+  maxShootDistance: 4
 --- !u!1001 &2178250656584183431
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     // Actions
     [SerializeField] private SpinAction spinAction;
 
+    [SerializeField] private ShootAction shootAction;
+
 
     // Action Points
     [SerializeField] private int energy_max = 2;
@@ -60,6 +62,8 @@ public class Player : MonoBehaviour
         moveSystem = GetComponent<MoveAction>();
 
         spinAction = GetComponent<SpinAction>();
+
+        shootAction = GetComponent<ShootAction>();
 
         turnSystem = UnitsActionSystem.Instance.TurnSystem;
 

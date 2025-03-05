@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3.93
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 6.7
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalRotation.w
@@ -59,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 3257784518061773747, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: isEnemy
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6032045771766740375, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
+      propertyPath: maxShootDistance
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8894626783395295391, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_Name
