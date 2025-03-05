@@ -9,9 +9,11 @@ public class SpinAction : PrimalAction
 
     private float totalSpinAmount;
 
+
     private void Awake()
     {
         ActionName = "Spin";
+        ActionPointsCost = 1;
     }
 
     private void Update()
@@ -33,8 +35,6 @@ public class SpinAction : PrimalAction
             IsActive = false;
             // Call delegate, binded to UnitAction System ready state
             onActionComplete();
-
-
         }
     }
 

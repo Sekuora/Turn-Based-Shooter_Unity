@@ -10,8 +10,12 @@ public abstract class PrimalAction : PlayerExoskeleton
 
     private string actionName;
 
+    private int actionPointsCost;
+
     // Set or get action name
     public string ActionName { get => actionName; set => actionName = value; }
+
+    public int ActionPointsCost { get => actionPointsCost; set => actionPointsCost = value; }
 
     public virtual bool IsValidActionGrid(GridPosition gridPosition)
     {
@@ -21,4 +25,6 @@ public abstract class PrimalAction : PlayerExoskeleton
     }
 
     public abstract List<GridPosition> CheckValidActionGrids();
+    
+    
 }

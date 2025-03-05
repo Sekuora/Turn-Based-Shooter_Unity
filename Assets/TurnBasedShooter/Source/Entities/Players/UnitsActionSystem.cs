@@ -15,11 +15,19 @@ public class UnitsActionSystem : MonoBehaviour
     // Instance of this class
     public static UnitsActionSystem Instance { get; private set; }
 
-    private bool IsReady;
+    private bool isReady;
 
     /* Event thrown when unit selection occurs
        Pass sender object, args for system events are left empty.*/
     public event EventHandler OnSelectedUnitChanged;
+
+    // Event for when currently active action changes
+    public event EventHandler OnSelectedActionChanged;
+
+    // Event for when currently ready state changes
+    public event EventHandler OnReadyStateChanged;
+
+    public event EventHandler OnActionTriggered;
 
     // Component References
     [SerializeField] private Player activePlayerUnit;
@@ -27,6 +35,8 @@ public class UnitsActionSystem : MonoBehaviour
     [SerializeField] private MouseRaycastSystem raycastSystem;
 
     [SerializeField] private LayerMask unitMask;
+
+    [SerializeField] private TurnSystem turnSystem;
 
     private PrimalAction activeAction;
 
@@ -55,7 +65,9 @@ public class UnitsActionSystem : MonoBehaviour
     private void Update()
     {
         // Return if action state is busy
-        if (!IsReady) { return; }
+        if (!isReady) { return; }
+
+        if (!turnSystem.IsPlayerTurn) { return; }
 
         // Return if mouse is over a button
         if(EventSystem.current.IsPointerOverGameObject()) { return; }
@@ -69,28 +81,45 @@ public class UnitsActionSystem : MonoBehaviour
 
     }
 
+    // Define what happens when an action is active
     private void WhenActiveAction()
     {
         if (Input.GetMouseButtonDown(0))
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(raycastSystem.CollectRaycastHitPoint());
 
-            switch (activeAction)
+            // Return if raycast is not on a valid action grid.
+            if (!activeAction.IsValidActionGrid(mouseGridPosition)) { return; }
+
+            // Check if active unit has enough points to cast action
+            if (activePlayerUnit.CheckEnoughActionPoints(activeAction))
             {
-                case MoveSystem moveSystem:
-                    // Call MoveAction if grid is valid
-                    if (moveSystem.IsValidActionGrid(mouseGridPosition))
-                    {
+                // Spend points to cast action
+                activePlayerUnit.SpendActionPoints(activeAction.ActionPointsCost);
+
+                // Throw Action Triggered Event
+                OnActionTriggered?.Invoke(this, EventArgs.Empty);
+
+
+                switch (activeAction)
+                {
+                    case MoveAction moveAction:
+                        // Call MoveAction if grid is valid
+                        if (moveAction.IsValidActionGrid(mouseGridPosition))
+                        {
+                            // Perform action
+                            SetNotReadyState();
+                            moveAction.SetTargetPosition(mouseGridPosition, SetReadyState);
+
+                        }
+                        break;
+
+                    case SpinAction spinAction:
                         SetNotReadyState();
-                        moveSystem.SetTargetPosition(mouseGridPosition, SetReadyState);
-                    }
-                    break;
+                        spinAction.Spin(SetReadyState);
+                        break;
 
-                case SpinAction spinAction:
-                    SetNotReadyState();
-                    spinAction.Spin(SetReadyState);
-                    break;
-
+                }
             }
         }
     }
@@ -99,13 +128,15 @@ public class UnitsActionSystem : MonoBehaviour
     // Set ready steate to true
     private void SetReadyState()
     {
-        IsReady = true;
+        isReady = true;
+        OnReadyStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     // Set ready steate to false
     private void SetNotReadyState()
     {
-        IsReady = false;
+        isReady = false;
+        OnReadyStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     // Return true if a player unit is selected
@@ -125,6 +156,12 @@ public class UnitsActionSystem : MonoBehaviour
                     // If player has the unit already selected return false
                     if(player == activePlayerUnit)
                     {
+                        return false;
+                    }
+
+                    // If unit is an enemy don't select it
+                    if (player.IsEnemy)
+                    {   
                         return false;
                     }
 
@@ -162,6 +199,9 @@ public class UnitsActionSystem : MonoBehaviour
     public void SetSelectedAction(PrimalAction action)
     {
         activeAction = action;
+
+        // Throw selected action changed event
+        OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
     }
 
     /* Active player getter */
@@ -173,4 +213,6 @@ public class UnitsActionSystem : MonoBehaviour
     // Getters / Setters
     public PrimalAction ActiveAction { get => activeAction; set => activeAction = value; }
 
+    public bool IsReady { get => isReady; }
+    public TurnSystem TurnSystem { get => turnSystem; set => turnSystem = value; }
 }

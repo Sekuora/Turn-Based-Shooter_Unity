@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveSystem : PrimalAction
+public class MoveAction : PrimalAction
 {
 
     [SerializeField]
@@ -15,6 +15,7 @@ public class MoveSystem : PrimalAction
     private void Awake()
     {
         ActionName = "Move";
+        ActionPointsCost = 2;
     }
 
     private void Update()
