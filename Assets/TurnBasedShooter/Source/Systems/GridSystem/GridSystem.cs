@@ -14,6 +14,8 @@ public class GridSystem
     // Define 2D Array for grid cells. Each cell can store its x, z positions.
     private GridCell[,] gridCellsArray;
 
+    
+
     // Constructor
     public GridSystem(int width, int height, float cellSize)
     {
@@ -93,5 +95,17 @@ public class GridSystem
         }
         return null;
     }
- 
+
+    // Define valid grid position conditions.
+    public bool IsGridPositionValid(GridPosition gridPosition)
+    {
+        return gridPosition.x >= 0 &&
+               gridPosition.z >= 0 &&
+               gridPosition.x < width &&
+               gridPosition.z < height;
+    }
+
+    // Getters / Setters
+    public int Width { get => width; set => width = value; }
+    public int Height { get => height; set => height = value; }
 } 
