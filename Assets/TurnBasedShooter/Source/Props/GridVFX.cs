@@ -1,5 +1,6 @@
 // Copyright(c) 2025 Fyragic. All rights reserved.
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,27 @@ public class GridVFX : MonoBehaviour
     private GridTile[,] individualTiles;
 
 
+    public enum GridTileType
+    {
+        White,
+        Blue,
+        Red,
+        Yellow,
+
+        OpaqueRed
+    }
+
+    [Serializable]
+    public struct GridTileMaterial
+    {
+        public GridTileType tileType;
+        public Material material;
+
+    }
+
+    [SerializeField]
+    private List<GridTileMaterial> tileMaterialsList;
+
     private void Awake()
     {
         // Set Instance
@@ -24,6 +46,8 @@ public class GridVFX : MonoBehaviour
         }
         Instance = this;
     }
+
+ 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -44,9 +68,19 @@ public class GridVFX : MonoBehaviour
                 individualTiles[x, z] = gridTileTransform.GetComponent<GridTile>();
             }
         }
+
+        UnitsActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged_Event;
+        LevelGrid.Instance.OnAnyUnitMovedGridPosition += OnAnyUnitMovedGridPosition_Event;
+
+        UpdateGridTile();
     }
 
-    private void Update()
+    private void OnAnyUnitMovedGridPosition_Event(object sender, EventArgs e)
+    {
+        UpdateGridTile();
+    }
+
+    private void OnSelectedActionChanged_Event(object sender, EventArgs e)
     {
         UpdateGridTile();
     }
@@ -64,24 +98,92 @@ public class GridVFX : MonoBehaviour
         }
     }
 
-    public void ShowGridPositions(List<GridPosition> gridPositions)
+    private void ShowGridPositionRange(GridPosition gridPosition, int range, GridTileType tileType)
+    {
+        List<GridPosition> gridPositions = new List<GridPosition>();
+
+        for(int x = -range; x <= range; x++)
+        {
+            for (int z = -range; z <= range; z++)
+            {
+                GridPosition testGridPosition = gridPosition + new GridPosition(x, z);
+
+                // Check if Grid Position is empty
+                if (!LevelGrid.Instance.IsGridPositionInRange(testGridPosition))
+                {
+
+                    continue;
+                }
+
+                int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
+                if (testDistance > range)
+                {
+                    continue;
+                }
+
+                gridPositions.Add(testGridPosition);
+            }
+        }
+
+        ShowGridPositions(gridPositions, tileType);
+    }
+
+    public void ShowGridPositions(List<GridPosition> gridPositions, GridTileType tileType)
     {
         foreach (GridPosition gridPosition in gridPositions)
         {
-            individualTiles[gridPosition.x, gridPosition.z].Show();
+            individualTiles[gridPosition.x, gridPosition.z].Show(CollectGridTileMaterial(tileType));
         }
     }
 
     // Update tile if is valid for current actions
     private void UpdateGridTile()
     {
-
+        Player playerUnit = UnitsActionSystem.Instance.GetActivePlayerUnit();
         PrimalAction activeAction = UnitsActionSystem.Instance.ActiveAction;
         // Hide positions by default
         HideAllGridPositions();
 
-        // Show only valid grid positions
-        ShowGridPositions(activeAction.CheckValidActionGrids());
+        GridTileType gridTileType;
 
+        switch(activeAction)
+        {
+            default:
+            case MoveAction moveAction:
+
+                gridTileType = GridTileType.White;
+                break;
+
+            case SpinAction spinAction:
+                gridTileType = GridTileType.Blue;
+                break;
+
+            case ShootAction shootAction:
+                gridTileType = GridTileType.Red;
+
+                ShowGridPositionRange(playerUnit.CurrentGridPosition, shootAction.MaxShootDistance, GridTileType.OpaqueRed);
+
+                break;
+
+
+        }
+        // Show only valid grid positions
+        ShowGridPositions(activeAction.CheckValidActionGrids(), gridTileType);
+
+    }
+
+
+    private Material CollectGridTileMaterial(GridTileType tileType)
+    {
+        foreach (GridTileMaterial gridTileMaterial in tileMaterialsList)
+        {
+            if(gridTileMaterial.tileType == tileType)
+            {
+                return gridTileMaterial.material;
+            }
+        }
+
+        Debug.LogError("Could not find a material for tile type");
+        return null;
     }
 }

@@ -39,7 +39,13 @@ public class UnitsActionSystem : MonoBehaviour
 
     [SerializeField] private TurnSystem turnSystem;
 
+    private Player currentTargetUnit;
+
     private PrimalAction activeAction;
+
+    // LastTargetPosition before OnNoHealthEvent;
+    private Vector3 lastTargetPosition;
+
 
 
     private void Awake()
@@ -122,7 +128,11 @@ public class UnitsActionSystem : MonoBehaviour
 
                     case ShootAction shootAction:
                         SetNotReadyState();
-                        shootAction.Spin(SetReadyState);
+
+                        // Set units action system current target thorugh shoot action's function return value
+                        currentTargetUnit = shootAction.Shoot(SetReadyState, mouseGridPosition);
+
+                        
                         break;
 
 
@@ -194,7 +204,7 @@ public class UnitsActionSystem : MonoBehaviour
         activePlayerUnit = player;
 
         // Set active action to player's movement system /action
-        SetSelectedAction(player.MoveSystem);
+        SetSelectedAction(player.MoveAction);
 
         Debug.Log("Switching player");
 
@@ -222,4 +232,6 @@ public class UnitsActionSystem : MonoBehaviour
 
     public bool IsReady { get => isReady; }
     public TurnSystem TurnSystem { get => turnSystem; set => turnSystem = value; }
+    public Player CurrentTargetUnit { get => currentTargetUnit; set => currentTargetUnit = value; }
+    public Vector3 LastTargetPosition { get => lastTargetPosition; set => lastTargetPosition = value; }
 }

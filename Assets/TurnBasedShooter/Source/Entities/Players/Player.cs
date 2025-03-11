@@ -23,12 +23,16 @@ public class Player : MonoBehaviour
     // Rotation Speed
     [SerializeField] private float rotationSpeed;
 
+    [SerializeField] private float height = 1.5f;
+
     // Player Component References
     // Animator Component
     [SerializeField] private Animator animator;
 
+    [SerializeField] private HealthSystem healthSystem;
+
     // Entity Action Components
-    [SerializeField] private MoveAction moveSystem;
+    [SerializeField] private MoveAction moveAction;
 
     [SerializeField] private TurnSystem turnSystem;
 
@@ -39,7 +43,7 @@ public class Player : MonoBehaviour
 
 
     // Action Points
-    [SerializeField] private int energy_max = 2;
+    [SerializeField] private int energyMax = 2;
 
     [SerializeField] private int energy = 2;
 
@@ -52,14 +56,16 @@ public class Player : MonoBehaviour
     // Array of primal actions
     private PrimalAction[] primalActions;
 
-
+    
     
     private void Awake()
     {
+        healthSystem = GetComponent<HealthSystem>();
+
         // Don't move to default target
         targetPosition = transform.position;
 
-        moveSystem = GetComponent<MoveAction>();
+        moveAction = GetComponent<MoveAction>();
 
         spinAction = GetComponent<SpinAction>();
 
@@ -72,7 +78,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        energy = energy_max;
+        energy = energyMax;
 
         // Get grid position of the player's transform position
         currentGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
@@ -81,9 +87,16 @@ public class Player : MonoBehaviour
         LevelGrid.Instance.AddUnitAtGridPosition(currentGridPosition, this);
 
         turnSystem.OnEndTurnButtonTriggered += OnEndTurnButtonTriggered_Event;
+
+        healthSystem.NoHealth += NoHealth_Event;
     }
 
-  
+    private void NoHealth_Event(object sender, EventArgs e)
+    {
+        LevelGrid.Instance.RemoveUnitAtGridPosition(currentGridPosition, this);
+        UnitsActionSystem.Instance.LastTargetPosition = transform.position;
+        Destroy(gameObject);
+    }
 
     /**
      *@brief Update Method of the PlayerSystem
@@ -96,16 +109,29 @@ public class Player : MonoBehaviour
         UpdateGridPosition();
     }
 
+    public Vector3 GetWorldPosition()
+    {
+        return transform.position;   
+    }
+
     private void UpdateGridPosition()
     {
         // Update grid position of this player
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         if (newGridPosition != currentGridPosition)
         {
-            // Call method to update unit's grid position
-            LevelGrid.Instance.UnitMovedGridPosition(this, currentGridPosition, newGridPosition);
+            // Call method to update unit's grid
+            GridPosition lastGridPosition = currentGridPosition;
             currentGridPosition = newGridPosition;
+            LevelGrid.Instance.UnitMovedGridPosition(this, lastGridPosition, newGridPosition);
+            
         }
+    }
+
+    public void Damage(int damageAmount)
+    {
+        healthSystem.DecreseHealth(damageAmount);
+        Debug.Log(transform + "took damage!");
     }
 
     public bool CheckEnoughActionPoints(PrimalAction action)
@@ -121,9 +147,14 @@ public class Player : MonoBehaviour
         
     }
 
+    public float GetEnergyNormalized()
+    {
+        return (float)energy / (float)energyMax;
+    }
+
     private void OnEndTurnButtonTriggered_Event(object sender, EventArgs e)
     {
-        energy = energy_max;
+        energy = energyMax;
         OnActionPointsChanged?.Invoke(this, EventArgs.Empty);
     }  
 
@@ -136,7 +167,7 @@ public class Player : MonoBehaviour
 
     public Vector3 TargetPosition { get => targetPosition; set => targetPosition = value; }
 
-    public MoveAction MoveSystem { get => moveSystem; set => moveSystem = value; }
+    public MoveAction MoveAction { get => moveAction; set => moveAction = value; }
 
     public GridPosition CurrentGridPosition { get => currentGridPosition; set => currentGridPosition = value; }
     
@@ -145,4 +176,8 @@ public class Player : MonoBehaviour
     public PrimalAction[] PrimalActions { get => primalActions; set => primalActions = value; }
     public int Energy { get => energy; set => energy = value; }
     public bool IsEnemy { get => isEnemy; set => isEnemy = value; }
+    public ShootAction ShootAction { get => shootAction; set => shootAction = value; }
+    public float Height { get => height; set => height = value; }
+    public int EnergyMax { get => energyMax; set => energyMax = value; }
+    public HealthSystem HealthSystem { get => healthSystem; set => healthSystem = value; }
 }

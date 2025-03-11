@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.93
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 861955357039808270, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 5758084003458957966, guid: 43e709b87b7e54f459649e961c675d38, type: 3}
     - target: {fileID: 2821445316371218424, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -60,6 +64,14 @@ PrefabInstance:
       propertyPath: isEnemy
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3257784518061773747, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
+      propertyPath: targetHeight
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3645972707720278237, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 5758084003458957966, guid: 43e709b87b7e54f459649e961c675d38, type: 3}
     - target: {fileID: 6032045771766740375, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: maxShootDistance
       value: 7

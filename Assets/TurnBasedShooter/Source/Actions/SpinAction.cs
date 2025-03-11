@@ -5,11 +5,7 @@ using UnityEngine;
 
 public class SpinAction : PrimalAction
 {
-
-
     private float totalSpinAmount;
-
-
     private void Awake()
     {
         ActionName = "Spin";
@@ -32,17 +28,16 @@ public class SpinAction : PrimalAction
         // Check if player has completed 1 360 degree spin and then stop
         if (totalSpinAmount >= 360f)
         {
-            IsActive = false;
-            // Call delegate, binded to UnitAction System ready state
-            onActionComplete();
+            ActionComplete();
+
         }
     }
 
     public void Spin(Action onActionComplete)
     {
-        this.onActionComplete = onActionComplete;
         totalSpinAmount = 0f;
-        IsActive = true;
+
+        ActionStart(onActionComplete);
     }
 
     public override List<GridPosition> CheckValidActionGrids()

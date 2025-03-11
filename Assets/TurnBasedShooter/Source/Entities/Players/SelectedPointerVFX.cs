@@ -43,4 +43,9 @@ public class SelectedPointerVFX : PlayerExoskeleton
         else
             selectedUnitPointer.enabled = false;
     }
+
+    private void OnDestroy()
+    {
+        UnitsActionSystem.Instance.OnSelectedUnitChanged -= UnitsActionSysten_OnSelectedUnitChanged;
+    }
 }

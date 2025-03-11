@@ -1,9 +1,14 @@
 // Copyright(c) 2025 Fyragic. All rights reserved.
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.EventSystems;
 
 public class LevelGrid : MonoBehaviour
 {
+    // Events
+    public event EventHandler OnAnyUnitMovedGridPosition;
+
     // Level Grid Instance
     public static LevelGrid Instance { get; private set; }
 
@@ -56,6 +61,8 @@ public class LevelGrid : MonoBehaviour
     {
         RemoveUnitAtGridPosition(fromGridPosition, playerUnit);
         AddUnitAtGridPosition(toGridPosition, playerUnit);
+
+        OnAnyUnitMovedGridPosition?.Invoke(this, EventArgs.Empty);
     }
 
     // Getter for Grid Position pertaining to a grid system.

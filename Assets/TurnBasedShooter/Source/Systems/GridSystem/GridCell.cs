@@ -54,7 +54,10 @@ public class GridCell
         string unitString = "";
         foreach(Player playerUnit in playerUnits)
         {
-            unitString += playerUnit.name + "\n";
+            if (playerUnit)
+            {
+                unitString += playerUnit.name + "\n";
+            }
         }
 
         return gridPosition.ToString() + "\n" + unitString;

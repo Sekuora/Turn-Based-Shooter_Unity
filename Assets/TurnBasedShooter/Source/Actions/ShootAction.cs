@@ -5,14 +5,30 @@ using System;
 
 public class ShootAction : PrimalAction
 {
+    public EventHandler OnShoot;
+    private enum State
+    {
+        Aiming,
+        Shooting,
+        Cooloff,
+    }
 
-    private float totalSpinAmount;
+    private State state;
+
+    private float stateTimer;
+
+    private bool canShoot;
+    
 
     [SerializeField]
     private int maxShootDistance = 7;
 
-    Player playerUnit;
+    private Player playerUnit;
 
+    private Player targetUnit;
+
+    public Player TargetUnit { get => targetUnit; set => targetUnit = value; }
+    public int MaxShootDistance { get => maxShootDistance; set => maxShootDistance = value; }
 
     public override List<GridPosition> CheckValidActionGrids()
     {
@@ -64,14 +80,14 @@ public class ShootAction : PrimalAction
             }
         }
 
-
+       
         return validGridPositions;
     }
 
     private void Awake()
     {
         ActionName = "Shoot";
-        ActionPointsCost = 3;
+        ActionPointsCost = 2;
     }
 
     // Update is called once per frame
@@ -79,29 +95,85 @@ public class ShootAction : PrimalAction
     {
         if (!IsActive) { return; }
 
-        // Rotate if active is true
-        float spinAddAmount = 360f * Time.deltaTime;
-        transform.eulerAngles += new Vector3(0, spinAddAmount, 0);
+        stateTimer -= Time.deltaTime;
 
-        totalSpinAmount += spinAddAmount;
-
-        Debug.Log(transform.eulerAngles.y);
-
-
-        // Check if player has completed 1 360 degree spin and then stop
-        if (totalSpinAmount >= 360f)
+        switch (state)
         {
-            IsActive = false;
-            // Call delegate, binded to UnitAction System ready state
-            onActionComplete();
+           
+            case State.Aiming:
+
+                Vector3 aimDirection = (targetUnit.GetWorldPosition() - Player.GetWorldPosition()).normalized;
+
+                Player.transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * Player.RotationSpeed);
+
+                break;
+            case State.Shooting:
+                if(canShoot)
+                {
+                    PerformShootAction();
+                    canShoot = false;
+                }
+                break;
+            case State.Cooloff: 
+                break;
         }
+
+        if (stateTimer <= 0f)
+        {
+            NextState();
+        }
+
     }
 
-
-    public void Spin(Action onActionComplete)
+    private void PerformShootAction()
     {
-        this.onActionComplete = onActionComplete;
-        totalSpinAmount = 0f;
-        IsActive = true;
+        OnShoot?.Invoke(this, EventArgs.Empty);
+        targetUnit.Damage(damageAmount);
+    }
+
+    private void NextState()
+    {
+        switch (state)
+        {
+            case State.Aiming:
+                state = State.Shooting;
+                float shootingStateTime = 0.1f;
+                stateTimer = shootingStateTime;
+                break;
+            case State.Shooting:
+                state = State.Cooloff;
+                float coolOffStateTime = 0.5f;
+                stateTimer = coolOffStateTime;
+                break;
+            case State.Cooloff:
+
+                ActionComplete();
+
+                break;
+        }
+
+        //Debug.Log(state);
+    }
+
+    public Player Shoot(Action onActionComplete, GridPosition actionGridPosition)
+    {
+        
+
+        targetUnit = LevelGrid.Instance.CollectPlayerUnitAtGridPosition(actionGridPosition);
+
+        Debug.Log(targetUnit);
+
+        Debug.Log("Aiming");
+
+        state = State.Aiming;
+
+        float aimingStateTime = 1f;
+        stateTimer = aimingStateTime;
+
+        canShoot = true;
+
+        ActionStart(onActionComplete);
+
+        return targetUnit;
     }
 }

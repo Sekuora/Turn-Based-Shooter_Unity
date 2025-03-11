@@ -1,13 +1,13 @@
 // Copyright(c) 2025 Fyragic. All rights reserved.
-using NUnit.Framework;
-using TMPro;
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveAction : PrimalAction
 {
+
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
 
     [SerializeField]
     private int maxMoveDistance = 4;
@@ -51,15 +51,16 @@ public class MoveAction : PrimalAction
 
            
             // set animation waling
-            Player.Animator.SetBool("IsWalking", true);
+            //Player.Animator.SetBool("IsWalking", true);
 
         }
         else
         {
-            // set animation idle
-            Player.Animator.SetBool("IsWalking", false);
-            IsActive = false;
-            onActionComplete();
+
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
+
+            ActionComplete();
+
         }
 
         // Transform Rotation
@@ -70,13 +71,15 @@ public class MoveAction : PrimalAction
     // Go to target: In this case mouse inputs or other peripherals define the target.
     public void SetTargetPosition(GridPosition targetPosition, Action onActionComplete)
     {
-        // Pass the onActionComplete delegate state
-        this.onActionComplete = onActionComplete;
-
         // Get the target world position
         Player.TargetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
-        IsActive = true;
+
+        OnStartMoving?.Invoke(this, EventArgs.Empty);
+
+        // Check this.onActionComplete status
+        ActionStart(onActionComplete);
     }
+
 
 
     // Check Grid Positions List calidity to perform actions
