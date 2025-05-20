@@ -56,7 +56,11 @@ public class UI_UnitActionSystem : MonoBehaviour
 
     private void OnEndTurnButtonTriggered_Event(object sender, EventArgs e)
     {
+        UnitsActionSystem.Instance.CurrentTargetUnit = null;
+        
         EnergyCostText.text = "Energy: " + UnitsActionSystem.Instance.GetActivePlayerUnit().Energy;
+
+   
     }
 
 
@@ -118,8 +122,13 @@ public class UI_UnitActionSystem : MonoBehaviour
         }
     }
 
-    private void UpdateCurrentUnitEnergyPoints()
+    public void UpdateCurrentUnitEnergyPoints()
     {
         EnergyCostText.text = "Energy: " + UnitsActionSystem.Instance.GetActivePlayerUnit().Energy;
+    }
+
+    public void UpdateCurrentUnitEnergyPoints(Player player)
+    {
+        EnergyCostText.text = "Energy: " + player.Energy;
     }
 }

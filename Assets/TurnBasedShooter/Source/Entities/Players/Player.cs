@@ -16,6 +16,10 @@ public class Player : MonoBehaviour
 
     public static event EventHandler OnActionPointsChanged;
 
+    public static event EventHandler OnUnitsSpawned;
+
+    public static event EventHandler OnUnitsDead;
+
     // Player Data
     // Move Speed
     [SerializeField] private float moveSpeed;
@@ -31,16 +35,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private HealthSystem healthSystem;
 
-    // Entity Action Components
-    [SerializeField] private MoveAction moveAction;
-
     [SerializeField] private TurnSystem turnSystem;
-
-    // Actions
-    [SerializeField] private SpinAction spinAction;
-
-    [SerializeField] private ShootAction shootAction;
-
 
     // Action Points
     [SerializeField] private int energyMax = 2;
@@ -56,20 +51,12 @@ public class Player : MonoBehaviour
     // Array of primal actions
     private PrimalAction[] primalActions;
 
-    
-    
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
 
         // Don't move to default target
         targetPosition = transform.position;
-
-        moveAction = GetComponent<MoveAction>();
-
-        spinAction = GetComponent<SpinAction>();
-
-        shootAction = GetComponent<ShootAction>();
 
         turnSystem = UnitsActionSystem.Instance.TurnSystem;
 
@@ -89,13 +76,32 @@ public class Player : MonoBehaviour
         turnSystem.OnEndTurnButtonTriggered += OnEndTurnButtonTriggered_Event;
 
         healthSystem.NoHealth += NoHealth_Event;
+
+        OnUnitsSpawned?.Invoke(this, EventArgs.Empty);
     }
+
+    // Generic Gettter for Primal Actions
+    public T GetAction<T>() where T : PrimalAction
+    {
+        foreach(PrimalAction action in primalActions)
+        {
+            if(action is T)
+            {
+                return (T)action;
+            }
+        }
+
+        return null;
+    }
+
 
     private void NoHealth_Event(object sender, EventArgs e)
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(currentGridPosition, this);
         UnitsActionSystem.Instance.LastTargetPosition = transform.position;
         Destroy(gameObject);
+
+        OnUnitsDead?.Invoke(this, EventArgs.Empty);
     }
 
     /**
@@ -167,16 +173,13 @@ public class Player : MonoBehaviour
 
     public Vector3 TargetPosition { get => targetPosition; set => targetPosition = value; }
 
-    public MoveAction MoveAction { get => moveAction; set => moveAction = value; }
-
     public GridPosition CurrentGridPosition { get => currentGridPosition; set => currentGridPosition = value; }
-    
-    // Actions
-    public SpinAction SpinAction { get => spinAction; set => spinAction = value; }
+
     public PrimalAction[] PrimalActions { get => primalActions; set => primalActions = value; }
+
     public int Energy { get => energy; set => energy = value; }
     public bool IsEnemy { get => isEnemy; set => isEnemy = value; }
-    public ShootAction ShootAction { get => shootAction; set => shootAction = value; }
+
     public float Height { get => height; set => height = value; }
     public int EnergyMax { get => energyMax; set => energyMax = value; }
     public HealthSystem HealthSystem { get => healthSystem; set => healthSystem = value; }

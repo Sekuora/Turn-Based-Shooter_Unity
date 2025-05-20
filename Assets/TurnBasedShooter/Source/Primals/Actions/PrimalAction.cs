@@ -51,5 +51,39 @@ public abstract class PrimalAction : PlayerExoskeleton
 
     public abstract List<GridPosition> CheckValidActionGrids();
     
-    
+
+    public AIActionData sortAIActionProbability()
+    {
+        // List AI Actions
+        List<AIActionData> AIActions = new List<AIActionData>();
+
+        List<GridPosition> validActionGridPositions = CheckValidActionGrids();
+
+        foreach (GridPosition gridPosition in validActionGridPositions)
+        {
+            // Get AI Action from each action return AI Action implementation
+            AIActionData unitAIAction = GetAIAction(gridPosition);
+
+            // Store them to AI Actions List
+            AIActions.Add(unitAIAction);
+        }
+
+        // If Actions are found
+        if (AIActions.Count > 0)
+        {
+            // Sort Algorithm that takes two actions an return its difference
+            AIActions.Sort((AIActionData a, AIActionData b) => b.actionValue - a.actionValue);
+
+            // Return the action at index 0
+            return AIActions[0];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    public abstract AIActionData GetAIAction(GridPosition gridPosition);
+  
 }

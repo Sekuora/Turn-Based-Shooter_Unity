@@ -3,6 +3,7 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine;
 using System.Buffers;
+using Unity.VisualScripting;
 
 
 /*
@@ -45,8 +46,6 @@ public class UnitsActionSystem : MonoBehaviour
 
     // LastTargetPosition before OnNoHealthEvent;
     private Vector3 lastTargetPosition;
-
-
 
     private void Awake()
     {
@@ -107,7 +106,6 @@ public class UnitsActionSystem : MonoBehaviour
                 // Throw Action Triggered Event
                 OnActionTriggered?.Invoke(this, EventArgs.Empty);
 
-
                 switch (activeAction)
                 {
                     case MoveAction moveAction:
@@ -130,12 +128,10 @@ public class UnitsActionSystem : MonoBehaviour
                         SetNotReadyState();
 
                         // Set units action system current target thorugh shoot action's function return value
+                        
                         currentTargetUnit = shootAction.Shoot(SetReadyState, mouseGridPosition);
-
                         
                         break;
-
-
                 }
             }
         }
@@ -204,7 +200,7 @@ public class UnitsActionSystem : MonoBehaviour
         activePlayerUnit = player;
 
         // Set active action to player's movement system /action
-        SetSelectedAction(player.MoveAction);
+        SetSelectedAction(player.GetAction<MoveAction>());
 
         Debug.Log("Switching player");
 

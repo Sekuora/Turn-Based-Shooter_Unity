@@ -14,7 +14,7 @@ public class GridMoveRangeTest : MonoBehaviour
             GridVFX.Instance.HideAllGridPositions();
 
             // Show only valid grid positions
-            GridVFX.Instance.ShowGridPositions(player.MoveAction.CheckValidActionGrids(), GridVFX.GridTileType.White);
+            GridVFX.Instance.ShowGridPositions(player.GetAction<MoveAction>().CheckValidActionGrids(), GridVFX.GridTileType.White);
 
             
         }

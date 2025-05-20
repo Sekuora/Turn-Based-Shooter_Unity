@@ -30,7 +30,13 @@ public class ShootAction : PrimalAction
     public Player TargetUnit { get => targetUnit; set => targetUnit = value; }
     public int MaxShootDistance { get => maxShootDistance; set => maxShootDistance = value; }
 
+
     public override List<GridPosition> CheckValidActionGrids()
+    {
+        return CheckValidActionGrids(Player.CurrentGridPosition);
+    }
+
+    public List<GridPosition> CheckValidActionGrids(GridPosition currentGridPosition)
     {
         List<GridPosition> validGridPositions = new();
 
@@ -94,12 +100,10 @@ public class ShootAction : PrimalAction
     void Update()
     {
         if (!IsActive) { return; }
-
         stateTimer -= Time.deltaTime;
 
         switch (state)
         {
-           
             case State.Aiming:
 
                 Vector3 aimDirection = (targetUnit.GetWorldPosition() - Player.GetWorldPosition()).normalized;
@@ -157,8 +161,6 @@ public class ShootAction : PrimalAction
 
     public Player Shoot(Action onActionComplete, GridPosition actionGridPosition)
     {
-        
-
         targetUnit = LevelGrid.Instance.CollectPlayerUnitAtGridPosition(actionGridPosition);
 
         Debug.Log(targetUnit);
@@ -175,5 +177,20 @@ public class ShootAction : PrimalAction
         ActionStart(onActionComplete);
 
         return targetUnit;
+    }
+
+    public override AIActionData GetAIAction(GridPosition gridPosition)
+    {
+        return new AIActionData
+        {
+            gridPosition = gridPosition,
+            actionValue = 100
+        }; 
+    }
+
+    public int FetchTargetsAtPosition(GridPosition inGridPosition)
+    {
+
+        return CheckValidActionGrids(inGridPosition).Count;
     }
 }

@@ -11,10 +11,22 @@ public class LevelGrid : MonoBehaviour
 
     // Level Grid Instance
     public static LevelGrid Instance { get; private set; }
+    public int Width { get => width; set => width = value; }
+    public int Height { get => height; set => height = value; }
+    public float CellSize { get => cellSize; set => cellSize = value; }
 
     // Entity Referenced Components
     [SerializeField] private Transform gridDebugAgent;
-    private GridSystem gridSystem;
+    private GridSystem<GridCell> gridSystem;
+
+    [SerializeField]
+    private int width;
+
+    [SerializeField]
+    private int height;
+
+    [SerializeField]
+    private float cellSize;
 
     // Pre start function initialiazation
     private void Awake()
@@ -29,9 +41,9 @@ public class LevelGrid : MonoBehaviour
         Instance = this;
 
         // Create The Grid System
-        gridSystem = new GridSystem(10, 10, 2f);
+        gridSystem = new GridSystem<GridCell>(width, height, cellSize, (GridSystem<GridCell> gridSystem, GridPosition gridPosition) => new GridCell(gridSystem, gridPosition));
         // Create Debug Data Agents
-        gridSystem.CreateDebugData(gridDebugAgent);
+        //gridSystem.CreateDebugData(gridDebugAgent);
     }
 
     // Get Grid Object and sets a unit in it.

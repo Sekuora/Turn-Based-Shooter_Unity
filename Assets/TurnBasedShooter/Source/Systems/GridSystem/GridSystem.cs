@@ -1,10 +1,11 @@
 // Copyright(c) 2025 Fyragic. All rights reserved.
+using System;
 using UnityEngine;
 
 /*
 * Remove monobehavior to get a normal c# class
 */
-public class GridSystem
+public class GridSystem<TGridCell> 
 {
     // Grid Data
     private int width;
@@ -12,12 +13,11 @@ public class GridSystem
     private float cellSize;
 
     // Define 2D Array for grid cells. Each cell can store its x, z positions.
-    private GridCell[,] gridCellsArray;
+    private TGridCell[,] gridCellsArray;
 
     
-
     // Constructor
-    public GridSystem(int width, int height, float cellSize)
+    public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridCell>, GridPosition, TGridCell> createGridCell)
     {
         // Grid Data
         this.width = width;
@@ -25,7 +25,7 @@ public class GridSystem
         this.cellSize = cellSize;
 
         // Create new grid objects array
-        gridCellsArray = new GridCell[width, height];
+        gridCellsArray = new TGridCell[width, height];
 
         // Generate grid: x for columns, z for rows.
         for (int x = 0; x < width; x++)
@@ -36,7 +36,7 @@ public class GridSystem
                 // Assign grid positions to x, z
                 GridPosition gridPosition = new GridPosition(x, z);
                 // Store grid positions inside an arrray of grid positions.
-                gridCellsArray[x, z] = new GridCell(this, gridPosition); 
+                gridCellsArray[x, z] = createGridCell(this, gridPosition); 
             }
         }
     }
@@ -82,7 +82,7 @@ public class GridSystem
     }
 
     // Get grid cell in a grid position
-    public GridCell GetGridCell(GridPosition gridPosition)
+    public TGridCell GetGridCell(GridPosition gridPosition)
     {
         try
         {
@@ -93,7 +93,7 @@ public class GridSystem
             Debug.Log("Exception: " + ex);
             Debug.Log("Location: " + gridPosition.x + "_" + gridPosition.z);
         }
-        return null;
+        return default;
     }
 
     // Define valid grid position conditions.

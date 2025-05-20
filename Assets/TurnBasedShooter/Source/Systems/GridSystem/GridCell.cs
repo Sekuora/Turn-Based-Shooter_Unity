@@ -7,14 +7,14 @@ using UnityEngine;
 public class GridCell
 {
     // Entity Referenced Components
-    private GridSystem gridSystem;
+    private GridSystem<GridCell> gridSystem;
     private GridPosition gridPosition;
 
     // Player Reference
     private List<Player> playerUnits;
 
     // Constructor
-    public GridCell(GridSystem gridSystem, GridPosition gridPosition)
+    public GridCell(GridSystem<GridCell> gridSystem, GridPosition gridPosition)
     {
         this.gridSystem = gridSystem;
         this.gridPosition = gridPosition;

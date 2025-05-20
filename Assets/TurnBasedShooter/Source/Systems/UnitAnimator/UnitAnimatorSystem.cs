@@ -20,8 +20,8 @@ public class UnitAnimatorSystem : PlayerExoskeleton
     override protected void Start()
     {
 
-        moveAction = Player.MoveAction;
-        shootAction = Player.ShootAction;
+        moveAction = Player.GetAction<MoveAction>();
+        shootAction = Player.GetAction<ShootAction>();
 
         moveAction.OnStartMoving += OnStartMoving_Event;
         moveAction.OnStopMoving += OnStopMoving_Event;

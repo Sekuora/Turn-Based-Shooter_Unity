@@ -47,4 +47,14 @@ public class SpinAction : PrimalAction
 
         return unitGridPosition;
     }
+
+    public override AIActionData GetAIAction(GridPosition gridPosition)
+    {
+
+        return new AIActionData
+        {
+            gridPosition = gridPosition,
+            actionValue = 0
+        };
+    }
 }

@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6
+      value: 10.93
       objectReference: {fileID: 0}
     - target: {fileID: 282190811775470466, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_LocalRotation.w
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 5758084003458957966, guid: 43e709b87b7e54f459649e961c675d38, type: 3}
     - target: {fileID: 6032045771766740375, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: maxShootDistance
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8894626783395295391, guid: 4750e06ca03a09c42bbf90d115f5b756, type: 3}
       propertyPath: m_Name

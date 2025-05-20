@@ -6,20 +6,20 @@ public class GridDebugAgent : MonoBehaviour
 {
 
     // TextMeshPro Reference
-    [SerializeField] private TextMeshPro textMeshPro;
+    [SerializeField] private TextMeshPro gridCoordinates;
 
-    private GridCell gridCell;
+    private object gridCell;
 
-    public void SetGridCell(GridCell gridCell)
+    public virtual void SetGridCell(object gridCell)
     {
         this.gridCell = gridCell;
     }
 
     // Update is called once per frame
-    private void Update()
+    protected virtual void Update()
     {
         /* Get the grid position of the grid object, transform it to a string
          * Pass, x : z position from the grid position to string method. */
-        textMeshPro.text = gridCell.ToString();
+        gridCoordinates.text = gridCell.ToString();
     }
 }

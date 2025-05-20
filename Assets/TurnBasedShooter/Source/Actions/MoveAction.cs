@@ -125,7 +125,16 @@ public class MoveAction : PrimalAction
         return validGridPositions;
     }
 
+    public override AIActionData GetAIAction(GridPosition gridPosition)
+    {
+        int targetsAtGridPosition = Player.GetAction<ShootAction>().FetchTargetsAtPosition(gridPosition);
 
- 
+        return new AIActionData
+        {
+            gridPosition = gridPosition,
+            // The more targets the higher the action value, AI will choose to go to crowded areas with player units
+            actionValue = targetsAtGridPosition * 10
+        };
+    }
 
 }

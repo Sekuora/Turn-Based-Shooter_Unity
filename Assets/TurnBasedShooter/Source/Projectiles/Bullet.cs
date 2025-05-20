@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        
         Player targetUnit = UnitsActionSystem.Instance.CurrentTargetUnit;
         if (!targetUnit)
         {
@@ -26,9 +27,9 @@ public class Bullet : MonoBehaviour
         {
             targetPosition = targetUnit.GetWorldPosition();
         }
-
+        // Something related to this needs to be fixed, the instance or something
         // Offset y to target height
-        Vector3 fixedTargetPosition = new(targetPosition.x, targetPosition.y + UnitsActionSystem.Instance.CurrentTargetUnit.Height, targetPosition.z);
+        Vector3 fixedTargetPosition = new(targetPosition.x, targetPosition.y + 1.5f, targetPosition.z);
 
         // Trace vector from this bullet position to current target unit
         Vector3 moveDirection = (fixedTargetPosition - transform.localPosition).normalized;
@@ -47,10 +48,10 @@ public class Bullet : MonoBehaviour
             // Unparent trail from bullet
             bulletTrail.transform.parent = null;
 
-
             // Destroy this game object
             Destroy(gameObject);
 
+         
 
             Instantiate(bulletHitFX, fixedTargetPosition, Quaternion.identity);
         }
